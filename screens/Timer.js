@@ -9,31 +9,31 @@ import { colors } from '../constants/color'
 import { spacing } from '../constants/sizes'
 
 const Timer = (
-    {focusSubject,onTimerEnd}
+    { focusSubject, onTimerEnd, clearSubject }
 ) => {
     useKeepAwake();
     const [isStarted, setisStarted] = useState(false);
     const [progress, setprogress] = useState(1)
     const [minutes, setminutes] = useState(1)
 
-    const onProgress=(progress)=>{
+    const onProgress = (progress) => {
         setprogress(progress)
     }
-    const vibrate=()=>{
-        if(Platform.OS==="ios"){
-            const interval=setInterval(() => 
+    const vibrate = () => {
+        if (Platform.OS === "ios") {
+            const interval = setInterval(() =>
                 Vibration.vibrate()
-            , 1000);
-            setTimeout(()=>clearInterval(interval),10000)
+                , 1000);
+            setTimeout(() => clearInterval(interval), 10000)
         }
-        else{
+        else {
             Vibration.vibrate(10000)
 
         }
     }
 
 
-    const onEnd=()=>{
+    const onEnd = () => {
         vibrate()
         setminutes(1)
         setprogress(1)
@@ -41,50 +41,53 @@ const Timer = (
         onTimerEnd();
 
     }
-    const changeTime=(time)=>{
+    const changeTime = (time) => {
         setminutes(time)
         setprogress(1)
         setisStarted(false)
     }
 
     return (
-        
-        <View style={styles.container}>
-           <View style={styles.countdown}>
-            
-            <Countdown minutes={minutes} isPaused={!isStarted} onProgress={onProgress} onEnd={onEnd}  />
 
-           </View>
-            
-            <View style={{paddingTop:spacing.xxl}}>
+        <View style={styles.container}>
+            <View style={styles.countdown}>
+
+                <Countdown minutes={minutes} isPaused={!isStarted} onProgress={onProgress} onEnd={onEnd} />
+
+            </View>
+
+            <View style={{ paddingTop: spacing.xxl }}>
                 <Text style={styles.title}>
-                    Focusing On : 
+                    Focusing On :
                 </Text>
-            <Text style={styles.task}>{focusSubject}</Text>
+                <Text style={styles.task}>{focusSubject}</Text>
 
             </View>
             <View style={{
-                marginTop:spacing.md
+                marginTop: spacing.md
             }}>
-                <ProgressBar color="red" style={{height:10}} progress={progress} />
+                <ProgressBar color="red" style={{ height: 10 }} progress={progress} />
             </View>
 
-                <View style={styles.buttonContainer}>
-                    <Timming changeTime={changeTime} />
-                    
-
-                </View>
             <View style={styles.buttonContainer}>
-           {!isStarted ? <RoundedButton title="start"  onPress={()=>{
-                return setisStarted(true)
-            }} /> :<RoundedButton title="stop"  onPress={()=>{
-                return setisStarted(false)
-            }} /> } 
-            
+                <Timming changeTime={changeTime} />
 
 
             </View>
+            <View style={styles.buttonContainer}>
+                {!isStarted ? <RoundedButton title="start" onPress={() => {
+                    return setisStarted(true)
+                }} /> : <RoundedButton title="stop" onPress={() => {
+                    return setisStarted(false)
+                }} />}
 
+
+            </View>
+            <View style={styles.clearSubject}>
+                <RoundedButton title="-" size={50} onPress={() => {
+                    clearSubject()
+                }} />
+            </View>
 
         </View>
     )
@@ -93,28 +96,33 @@ const Timer = (
 export default Timer
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,       
+    container: {
+        flex: 1,
     },
-    title:{
-        color:colors.white,
-        textAlign:'center'
+    title: {
+        color: colors.white,
+        textAlign: 'center'
     },
-    task:{
-        color:colors.white,
-        fontWeight:'bold',
-        textAlign:'center'
+    task: {
+        color: colors.white,
+        fontWeight: 'bold',
+        textAlign: 'center'
     },
-    countdown:{
-        flex:0.5,
-        flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'center'
+    countdown: {
+        flex: 0.5,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-    buttonContainer:{
-        flex:0.3,
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center'
+    buttonContainer: {
+        flex: 0.3,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    clearSubject: {
+        paddingBottom: 20,
+        paddingLeft: 25
+
     }
 })
